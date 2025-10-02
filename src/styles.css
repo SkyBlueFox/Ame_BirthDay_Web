@@ -1,0 +1,380 @@
+/* =========================
+   THEME TOKENS
+   ========================= */
+:root{
+  /* Angel (ค่าเริ่มต้น) */
+  --text:#0f2f75; --muted:#64748B; --line:#E5E7EB;
+
+  /* พื้นหลังหลักของหน้า/หัว/ลิ้นชัก */
+  --page-bg:#E6F2FF; --nav-bg:#E6F2FF; --drawer-bg:#FFFFFF;
+
+  /* พื้นคอมโพเนนต์ */
+  --card-bg:#FFFFFF; --soft-bg:#F5FAFF;
+
+  /* ปุ่ม/ไฮไลต์ */
+  --accent:#4EA8FF; --accent-strong:#1D4ED8;
+
+  /* ปุ่มรอง */
+  --navy-btn:#0B1A57;
+
+  /* รัศมี/เงา/เลย์เอาต์ */
+  --radius-card:12px; --radius-btn:10px; --radius-chip:16px;
+  --shadow:0 2px 8px rgba(0,0,0,.06); --touch:44px; --maxw:1120px;
+
+  /* สีไอคอนโซเชียล (เริ่มต้น) */
+  --icon: var(--text, #111);
+  --icon-hover: var(--accent-strong, #2563eb);
+  --icon-bg: var(--card-bg, #fff);
+  --icon-border: var(--line, #e5e7eb);
+  --icon-bg-hover: #f5f5f5;
+}
+
+/* Devil = แดง–ดำ (override token) */
+:root[data-theme="devil"]{
+  --text:#FFFFFF; --muted:#E5E7EB; --line:#262626;
+  --page-bg:#0E0E0E; --nav-bg:#0E0E0E; --drawer-bg:#0E0E0E;
+  --card-bg:#141414; --soft-bg:#1A1A1A;
+  --accent:#E11D2E; --accent-strong:#B31321;
+  --navy-btn:#001B44;
+  /* ไอคอนโซเชียลในธีม devil */
+  --icon:#E11D2E; --icon-hover:#b91c1c;
+  --icon-bg:transparent; --icon-border:#E11D2E; --icon-bg-hover:rgba(239,68,68,.08);
+}
+
+/* Fallback โหมดมืดตามระบบ ถ้าไม่ตั้ง data-theme */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme]){
+    --icon:#e5e7eb; --icon-hover:#60a5fa; --icon-bg:#111;
+    --icon-border:#374151; --icon-bg-hover:#1f2937;
+  }
+}
+
+/* =========================
+   BASE & UTILITIES
+   ========================= */
+*{box-sizing:border-box}
+html,body,#root{height:100%}
+body{
+  margin:0;
+  font-family:"Inter", system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, sans-serif;
+  background:var(--page-bg); color:var(--text);
+}
+a, a:visited, a:active, .btn { text-decoration:none !important }
+
+.center{ text-align:center }
+.narrow{ max-width:420px; margin-inline:auto }
+.w-full{ width:100% }
+.app{min-height:100%;display:flex;flex-direction:column}
+
+/* =========================
+   NAVBAR & BUTTONS
+   ========================= */
+.nav{
+  position:sticky; top:0; background:var(--nav-bg);
+  border-bottom:1px solid var(--line); height:56px;
+  display:flex; align-items:center; gap:12px; padding:0 16px; z-index:30;
+}
+.top-title{ font-weight:800; font-size:16px }
+.spacer{flex:1}
+
+.btn,.chip,button{
+  border:none; background:var(--accent); color:#fff;
+  padding:.75rem 1rem; border-radius:var(--radius-btn);
+  font-weight:700; cursor:pointer; box-shadow:var(--shadow);
+  line-height:1; min-height:var(--touch);
+  display:inline-flex; align-items:center; justify-content:center; text-align:center;
+}
+.btn-ghost{
+  background:var(--card-bg); color:var(--text);
+  border:1px solid var(--line); box-shadow:none;
+}
+.btn-small{padding:.5rem .75rem; min-height:36px; box-shadow:none}
+.focus-ring:focus-visible{outline:3px solid var(--accent); outline-offset:2px; border-radius:12px}
+
+/* สวิตช์ธีม */
+.theme-switch{
+  display:flex; align-items:center; height:30px; width:64px; padding:3px;
+  border:1px solid var(--line); border-radius:18px;
+  background:rgba(255,255,255,.7); backdrop-filter:blur(4px); cursor:pointer;
+}
+:root[data-theme="devil"] .theme-switch{ background:rgba(0,0,0,.35) }
+.theme-knob{
+  width:24px; height:24px; border-radius:12px; background:var(--accent);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800;
+}
+:root[data-theme="angel"] .theme-switch { justify-content:flex-start }
+:root[data-theme="devil"] .theme-switch { justify-content:flex-end }
+
+/* =========================
+   GENERIC BLOCKS
+   ========================= */
+.container{width:100%;max-width:var(--maxw);margin:0 auto;padding:16px}
+.title{font-size:24px;font-weight:800;margin:8px 0}
+.sub{color:var(--muted);margin:4px 0 12px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.card{ border:1px solid var(--line); border-radius:var(--radius-card); background:var(--card-bg); box-shadow:var(--shadow); padding:16px }
+.muted{color:var(--muted)}
+.row{display:flex;align-items:center;gap:12px}
+
+/* =========================
+   COUNTDOWN
+   ========================= */
+.countdown{ display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin:10px 0 14px; place-items:center }
+.tile{
+  border:1px solid var(--line); border-radius:12px; background:var(--card-bg);
+  padding:12px 14px; width:100%; max-width:160px
+}
+.tile .num{font-size:22px;font-weight:800;color:var(--accent-strong);text-align:center}
+.tile .lbl{font-size:12px;color:var(--muted);text-align:center}
+
+/* =========================
+   HOME
+   ========================= */
+.big-pill{
+  height:56px; border-radius:16px;
+  background:#93C5FD; color:#0B2A6F;
+  display:flex; align-items:center; justify-content:center;
+  font-weight:800; font-size:28px; letter-spacing:1px; box-shadow:var(--shadow);
+  margin:12px auto; width:100%; max-width:360px;
+}
+:root[data-theme="devil"] .big-pill{ background:var(--accent); color:#fff }
+
+.banner-home{
+  position:relative; padding:0; overflow:hidden; border-radius:12px;
+  border:1px solid var(--line); height:180px;
+  background:linear-gradient(180deg,#EAF3FF 0%, #FFFFFF 90%);
+  display:flex; align-items:center; justify-content:center; color:var(--muted);
+  margin:16px auto 0; width:100%; max-width:680px;
+}
+:root[data-theme="devil"] .banner-home{
+  background:linear-gradient(180deg,#141414 0%, #0E0E0E 95%);
+}
+.banner-home .banner-img{ width:100%; height:100%; object-fit:cover; display:block }
+
+/* CTA ลอยล่าง */
+.sticky-cta{
+  position:fixed; left:0; right:0; bottom:16px; display:flex;
+  justify-content:center; pointer-events:none; z-index:10;
+}
+.sticky-cta .btn{ pointer-events:auto; width:calc(100% - 48px); max-width:360px; height:48px; border-radius:16px; background:var(--accent); font-weight:800 }
+
+/* =========================
+   DRAWER
+   ========================= */
+.drawer-overlay{ position:fixed; inset:0; background:rgba(0,0,0,.15); z-index:40 }
+.drawer{
+  position:fixed; top:0; bottom:0; left:0; width:min(320px, 86vw);
+  background:var(--drawer-bg); border-right:1px solid var(--line);
+  padding:16px; display:flex; flex-direction:column; gap:12px; color:var(--text);
+  box-shadow: 8px 0 24px rgba(0,0,0,.12); z-index:50;
+}
+.drawer .card{ background:var(--card-bg); color:var(--text) }
+@media (max-width:390px){ .drawer{ width:min(300px, 88vw) } }
+@media (min-width:1200px){ .drawer{ width:340px } }
+
+/* =========================
+   SPLASH
+   ========================= */
+.splash-bg{min-height:100dvh;background:var(--page-bg);display:flex;align-items:center;justify-content:center;padding:24px 16px}
+.splash-wrap{width:100%;max-width:360px;position:relative}
+
+/* ปุ่มสลับธีมแบบ FAB */
+.theme-fab-fixed{
+  position:fixed; top:10px; right:10px; z-index:20;
+  display:inline-flex; align-items:center; gap:8px;
+  height:36px; padding:0 12px; border-radius:18px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.7); backdrop-filter:blur(4px);
+  cursor:pointer; font-weight:700;
+}
+:root[data-theme="devil"] .theme-fab-fixed{ background:rgba(0,0,0,.35) }
+.theme-fab-fixed .knob{
+  width:22px; height:22px; border-radius:11px; background:var(--accent);
+  color:#fff; display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:800;
+}
+
+.hero-card{ background:#EAF3FF; border:1px dashed #99B6E6; border-radius:12px; padding:24px; text-align:center; color:#0B2A6F; margin:0 auto; max-width:320px }
+:root[data-theme="devil"] .hero-card{ background:#1A1A1A; border-color:#333; color:#fff }
+.hero-title{font-size:26px;font-weight:800;line-height:1.15}
+.hero-title .year{display:block;font-size:28px;margin-top:4px}
+.chip-lg{
+  margin-top:12px; display:block; width:100%; text-align:center;
+  background:#F3F7FF; border:1px dashed #99B6E6; color:#0B2A6F;
+  padding:12px 14px; border-radius:12px; font-weight:800; font-size:18px;
+  max-width:360px; margin-inline:auto;
+}
+:root[data-theme="devil"] .chip-lg{ background:#151515; border-color:#333; color:#fff }
+.btn-start{ display:block; width:100%; max-width:360px; margin:14px auto 0; background:var(--accent); color:#fff; border:none; border-radius:18px; height:48px; font-weight:800; box-shadow:var(--shadow) }
+
+/* =========================
+   FORMS
+   ========================= */
+.panel{
+  background:var(--soft-bg); border:1px solid var(--line);
+  border-radius:20px; padding:16px 16px 24px; box-shadow:var(--shadow);
+}
+.form{ display:flex; flex-direction:column; gap:8px }
+.form-label{ color:var(--muted); font-weight:700; margin-bottom:4px }
+.input,.textarea{
+  width:100%; background:var(--card-bg); color:var(--text);
+  border:1px solid var(--line); border-radius:12px; padding:.75rem 1rem; outline:none;
+  box-shadow: inset 0 0 0 0 rgba(0,0,0,0);
+}
+.input:focus,.textarea:focus{ border-color:var(--accent-strong); box-shadow:0 0 0 3px rgba(77,160,255,.25) }
+:root[data-theme="devil"] .input:focus,
+:root[data-theme="devil"] .textarea:focus{ box-shadow:0 0 0 3px rgba(225,29,46,.25) }
+.stack-btn{ display:flex; flex-direction:column; gap:12px; margin-top:16px }
+.btn-lg{ height:48px; border-radius:16px; font-weight:800 }
+/* ปุ่มรอง: angel ใช้สีน้ำเงินเข้มจาก token */
+.btn-navy{ background: var(--navy-btn); color:#fff }
+
+/* devil ใช้เทาเหมือนในรูป */
+:root[data-theme="devil"] .btn-navy{
+  background:#9c9393;
+  color:#fff;
+}
+
+
+/* =========================
+   WISH DETAIL
+   ========================= */
+.wish-big{
+  background:var(--soft-bg); border:1px solid var(--line);
+  border-radius:16px; padding:20px; min-height:220px; max-width:360px;
+  margin:12px auto 16px; box-shadow:0 6px 20px rgba(0,0,0,.08);
+  display:flex; align-items:center; justify-content:center; position:relative;
+}
+.wish-big-text{ font-weight:800; color:var(--text) }
+.wish-author{ position:absolute; right:12px; bottom:10px; font-size:12px; color:var(--muted) }
+
+/* =========================
+   WISHES LIST
+   ========================= */
+.wish-grid{
+  display:grid; grid-template-columns:1fr 1fr; gap:12px; padding:8px;
+  border:1px dashed #99B6E6; border-radius:12px;
+}
+:root[data-theme="devil"] .wish-grid{ border-color:#333 }
+.wish-card{
+  display:block; background:var(--card-bg); border:1px solid var(--line);
+  border-radius:12px; padding:12px; box-shadow:var(--shadow); color:var(--text);
+}
+.wish-sender{ font-weight:800; margin-bottom:6px }
+.wish-msg{
+  font-size:14px; color:var(--muted);
+  display:-webkit-box; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+/* =========================
+   STAGE LIST
+   ========================= */
+/* ---- Stages header ---- */
+.stage-range{
+  position:relative; text-align:center; font-weight:800;
+  background:var(--card-bg); border:1px solid var(--line);
+  border-radius:12px; padding:8px 12px;
+}
+.stage-range-btn{ position:absolute; right:6px; top:6px }
+
+/* ---- List wrapper (กรอบเส้นประตามภาพ) ---- */
+.stage-list{
+  margin-top:12px; padding:8px; border:1px dashed #99B6E6;
+  border-radius:12px; display:flex; flex-direction:column; gap:12px;
+}
+
+/* ---- Card per row ---- */
+.stage-item{
+  display:flex; align-items:center; gap:16px; padding:16px;
+  background:var(--card-bg); border:1px solid var(--line);
+  border-radius:14px; box-shadow:var(--shadow);
+}
+
+/* ซ้าย: กล่องรูปใหญ่สีอ่อน */
+.stage-thumb{
+  flex:0 0 220px; height:140px; border-radius:12px;
+  background:#EEF5FF; color:#0B2A6F;
+  display:flex; align-items:center; justify-content:center;
+  overflow:hidden;
+}
+:root[data-theme="devil"] .stage-thumb{ background:#141414; color:#fff }
+.stage-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
+
+/* กลาง: พื้นขาวยาว */
+.stage-spacer{ flex:1; height:140px; border-radius:12px; background:var(--card-bg) }
+
+/* ขวา: วันที่ตัวหนาสีน้ำเงินเข้ม */
+.stage-date{ margin-left:auto; font-weight:800; color:var(--accent-strong) }
+
+/* ปิดการโต้ตอบตามภาพ */
+.stage-item, .stage-item *{ user-select:none; cursor:default }
+
+
+/* =========================
+   ABOUT
+   ========================= */
+.about-card{ border:1px solid #99B6E6; border-radius:12px; background:#EAF3FF; padding:16px }
+:root[data-theme="devil"] .about-card{ border-color:#333; background:#151515 }
+.about-heading{
+  text-align:center; font-weight:800; margin:4px 0 12px; padding:10px 8px;
+  border:1px dashed #99B6E6; border-radius:8px; color:#0B2A6F; background:#a9d8ff;
+}
+:root[data-theme="devil"] .about-heading{ border-color:#333; color:#fff; background:#E11D2E }
+.about-avatar-wrap{ display:flex; justify-content:center; margin:12px 0 }
+.about-avatar{ width:160px; height:160px; border-radius:999px; background:#F3F7FF; color:#0B2A6F; display:flex; align-items:center; justify-content:center; font-weight:800; border:1px solid #99B6E6 }
+:root[data-theme="devil"] .about-avatar{ background:#101010; color:#fff; border-color:#333 }
+.about-avatar-img{ width:160px; height:160px; border-radius:50%; object-fit:cover; display:block }
+.about-fields{ display:flex; flex-direction:column; gap:18px; border-top:1px dashed #99B6E6; padding-top:12px }
+:root[data-theme="devil"] .about-fields{ border-color:#333 }
+.about-row{ display:flex; gap:12px }
+.about-label{ min-width:92px; color:#0B2A6F; font-weight:700 }
+:root[data-theme="devil"] .about-label{ color:#fff }
+.about-value{ color:var(--text) }
+
+/* =========================
+   SOCIAL ICONS
+   ========================= */
+.socials{ display:flex; gap:12px; align-items:center }
+.social-btn{
+  width:40px; height:40px; border-radius:9999px;
+  display:inline-flex; align-items:center; justify-content:center;
+  color:var(--icon); background:var(--icon-bg); border:1px solid var(--icon-border);
+  transition: color .15s ease, background .15s ease, border-color .15s ease, transform .05s ease;
+  box-shadow:var(--shadow-sm,0 1px 2px rgba(0,0,0,.05));
+}
+.social-btn:hover{ color:var(--icon-hover); background:var(--icon-bg-hover); border-color:var(--icon-hover) }
+.social-btn:active{ transform:scale(.98) }
+.social-btn:focus-visible{ outline:2px solid var(--icon-hover); outline-offset:2px }
+.social-btn svg{ width:22px; height:22px; fill:currentColor }
+
+/* =========================
+   THEME-SPECIFIC BEHAVIOR
+   ========================= */
+/* สลับรูปโปรไฟล์ตามธีม */
+.about-avatar-img.devil{ display:none }
+[data-theme="devil"] .about-avatar-img.normal{ display:none }
+[data-theme="devil"] .about-avatar-img.devil{ display:block }
+
+.stage-gallery, .stage-gallery *{ cursor:default; user-select:none }
+.stage-gallery img{ pointer-events:none }
+
+.stage-range{
+  position:relative;
+  padding:8px 40px 8px 40px; /* เว้นซ้ายขวาให้ปุ่ม */
+  text-align:center; font-weight:800;
+  background:var(--card-bg); border:1px solid var(--line); border-radius:12px;
+}
+.stage-range-btn{
+  position:absolute; top:50%; transform:translateY(-50%);
+  width:28px; height:28px; line-height:28px;
+  background:transparent; border:none; box-shadow:none;
+  color:var(--muted); font-weight:800; font-size:18px;
+  cursor:pointer; border-radius:9999px;
+}
+.stage-range-btn.prev{ left:8px }
+.stage-range-btn.next{ right:8px }
+.stage-range-btn:hover{ background:rgba(0,0,0,.06) }
+:root[data-theme="devil"] .stage-range-btn:hover{ background:rgba(255,255,255,.06) }
+.stage-range-btn:disabled{ opacity:.4; cursor:default; pointer-events:none }
+.stage-range-btn:focus-visible{ outline:2px solid var(--accent); outline-offset:2px }
