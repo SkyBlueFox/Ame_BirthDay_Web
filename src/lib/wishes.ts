@@ -1,45 +1,48 @@
 // src/lib/wishes.ts
+import { supabase } from './supabase'
+
 export type Wish = {
-  id: string;
-  name: string;
-  message: string;
-  createdAt: number;
-};
-
-const KEY = 'ame_wishes_v1';
-
-function readAll(): Wish[] {
-  try {
-    const raw = localStorage.getItem(KEY);
-    return raw ? (JSON.parse(raw) as Wish[]) : [];
-  } catch {
-    return [];
-  }
+  id: string
+  author: string
+  message: string
+  created_at: string
 }
 
-function saveAll(list: Wish[]) {
-  localStorage.setItem(KEY, JSON.stringify(list));
+/** อ่านล่าสุด เรียงใหม่->เก่า */
+export async function fetchWishes(limit = 200): Promise<Wish[]> {
+  const { data, error } = await supabase
+    .from('wishes')
+    .select('*')
+    .order('created_at', { ascending: false })
+    .limit(limit)
+  if (error) throw error
+  return data ?? []
 }
 
-export function addWish(name: string, message: string): Wish {
-  const now = Date.now();
-  const id = `${now}-${Math.random().toString(36).slice(2, 8)}`;
-  const wish: Wish = { id, name: name.trim() || 'Anonymous', message: message.trim(), createdAt: now };
-  const list = readAll();
-  list.unshift(wish); // ใหม่สุดไว้บน
-  saveAll(list);
-  return wish;
+/** สร้างคำอวยพรใหม่ */
+export async function createWish(input: { author: string; message: string }): Promise<Wish> {
+  const author = input.author.trim()
+  const message = input.message.trim()
+  if (!author || !message) throw new Error('กรอกข้อมูลให้ครบ')
+  if (author.length > 80) throw new Error('ชื่อยาวเกิน 80 ตัวอักษร')
+  if (message.length > 500) throw new Error('ข้อความยาวเกิน 500 ตัวอักษร')
+
+  const { data, error } = await supabase
+    .from('wishes')
+    .insert({ author, message })
+    .select()
+    .single()
+  if (error) throw error
+  return data!
 }
 
-export function getWish(id: string): Wish | undefined {
-  return readAll().find(w => w.id === id);
-}
-
-export function listWishes(offset = 0, limit = 10): Wish[] {
-  const list = readAll();
-  return list.slice(offset, offset + limit);
-}
-
-export function countWishes(): number {
-  return readAll().length;
+/** subscribe realtime เมื่อมีการ insert */
+export function subscribeWishes(onInsert: (w: Wish) => void) {
+  const channel = supabase
+    .channel('wishes-insert')
+    .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'wishes' }, (payload) => {
+      onInsert(payload.new as Wish)
+    })
+    .subscribe()
+  return () => { supabase.removeChannel(channel) }
 }

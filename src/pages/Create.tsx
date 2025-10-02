@@ -1,64 +1,65 @@
 // src/pages/Create.tsx
-import { FormEvent, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { addWish } from "../lib/wishes";
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { createWish } from '../lib/wishes'
 
-export default function Create() {
-  const nav = useNavigate();
-  const [name, setName] = useState("");
-  const [message, setMessage] = useState("");
-  const [sending, setSending] = useState(false);
+export default function Create(){
+  const [author, setAuthor] = useState('')
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(false)
+  const nav = useNavigate()
 
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
-    setSending(true);
-    // mock ส่ง
-    setTimeout(() => {
-      const wish = addWish(name, message);
-      setSending(false);
-      // ไปหน้าแสดงคำอวยพรที่เพิ่งส่ง
-      nav(`/wish/${wish.id}`, { replace: true });
-    }, 350);
-  };
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (loading) return
+    try {
+      setLoading(true)
+      await createWish({ author, message })
+      setAuthor(''); setMessage('')
+      nav('/wishes') // ไปหน้ารายการ
+    } catch (err:any) {
+      alert(err.message ?? 'บันทึกไม่สำเร็จ')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
-    <section className="container narrow">
-      <div className="panel">
-        <h1 className="title center">คำอวยพรของฉัน</h1>
+    <section className="container">
+      <h1 className="title">เขียนคำอวยพร</h1>
 
-        <form onSubmit={onSubmit} className="form">
-          <label className="form-label">ชื่อ</label>
+      <div className="panel">
+        <form className="form" onSubmit={onSubmit}>
+          <label className="form-label" htmlFor="name">ชื่อผู้ส่ง</label>
           <input
+            id="name"
             className="input"
-            type="text"
-            maxLength={40}
-            placeholder="ใส่ชื่อเล่น"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            placeholder="เช่น เพื่อนเอ"
+            value={author}
+            onChange={e=>setAuthor(e.target.value)}
+            maxLength={80}
+            required
           />
 
-          <label className="form-label" style={{ marginTop: 12 }}>คำอวยพร</label>
+          <label className="form-label" htmlFor="text">ข้อความ</label>
           <textarea
+            id="text"
             className="textarea"
-            rows={8}
-            maxLength={500}
-            placeholder="พิมพ์คำอวยพรของคุณ…"
+            placeholder="สุขสันต์วันเกิด..."
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={e=>setMessage(e.target.value)}
+            rows={5}
+            maxLength={500}
+            required
           />
 
           <div className="stack-btn">
-            <button className="btn btn-lg" disabled={sending || !message.trim()}>
-              {sending ? "กำลังส่ง…" : "ส่งคำอวยพร"}
+            <button className="btn btn-lg" type="submit" disabled={loading}>
+              {loading ? 'กำลังบันทึก...' : 'ส่งคำอวยพร'}
             </button>
-
-            <Link className="btn btn-lg btn-navy" to="/home">
-              หน้าแรก
-            </Link>
           </div>
         </form>
       </div>
     </section>
-  );
+  )
 }
