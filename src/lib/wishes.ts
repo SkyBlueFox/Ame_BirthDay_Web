@@ -8,7 +8,7 @@ export type Wish = {
   created_at: string
 }
 
-/** อ่านล่าสุด เรียงใหม่->เก่า */
+/** อ่านล่าสุด ใหม่ -> เก่า */
 export async function fetchWishes(limit = 200): Promise<Wish[]> {
   const { data, error } = await supabase
     .from('wishes')
@@ -19,7 +19,7 @@ export async function fetchWishes(limit = 200): Promise<Wish[]> {
   return data ?? []
 }
 
-/** สร้างคำอวยพรใหม่ */
+/** เพิ่มคำอวยพรใหม่ */
 export async function createWish(input: { author: string; message: string }): Promise<Wish> {
   const author = input.author.trim()
   const message = input.message.trim()
@@ -36,7 +36,22 @@ export async function createWish(input: { author: string; message: string }): Pr
   return data!
 }
 
-/** subscribe realtime เมื่อมีการ insert */
+/** ดึงคำอวยพรตาม id; ไม่พบให้คืน null */
+export async function getWish(id: string): Promise<Wish | null> {
+  const { data, error } = await supabase
+    .from('wishes')
+    .select('*')
+    .eq('id', id)
+    .single()
+  if (error) {
+    // PGRST116: No rows found
+    if ((error as any).code === 'PGRST116') return null
+    throw error
+  }
+  return data ?? null
+}
+
+/** realtime เมื่อมีการเพิ่มรายการใหม่ */
 export function subscribeWishes(onInsert: (w: Wish) => void) {
   const channel = supabase
     .channel('wishes-insert')
