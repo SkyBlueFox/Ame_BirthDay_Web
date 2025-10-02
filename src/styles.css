@@ -271,44 +271,68 @@ a, a:visited, a:active, .btn { text-decoration:none !important }
    STAGE LIST
    ========================= */
 /* ---- Stages header ---- */
-.stage-range{
-  position:relative; text-align:center; font-weight:800;
-  background:var(--card-bg); border:1px solid var(--line);
-  border-radius:12px; padding:8px 12px;
-}
-.stage-range-btn{ position:absolute; right:6px; top:6px }
-
-/* ---- List wrapper (กรอบเส้นประตามภาพ) ---- */
+/* ===== Stages: responsive layout ===== */
 .stage-list{
-  margin-top:12px; padding:8px; border:1px dashed #99B6E6;
-  border-radius:12px; display:flex; flex-direction:column; gap:12px;
+  display:flex; flex-direction:column; gap:14px;
 }
 
-/* ---- Card per row ---- */
+/* การ์ด 1 แถว: รูปซ้าย ข้อความ/วันที่ขวา */
 .stage-item{
-  display:flex; align-items:center; gap:16px; padding:16px;
-  background:var(--card-bg); border:1px solid var(--line);
-  border-radius:14px; box-shadow:var(--shadow);
+  display:flex; align-items:center; gap:14px;
+  overflow:hidden; /* กันล้นเมื่อจอแคบ */
 }
 
-/* ซ้าย: กล่องรูปใหญ่สีอ่อน */
+/* กล่องรูป ยืดตามจอ: 96–220px กว้าง, 72–140px สูง */
 .stage-thumb{
-  flex:0 0 220px; height:140px; border-radius:12px;
-  background:#EEF5FF; color:#0B2A6F;
-  display:flex; align-items:center; justify-content:center;
-  overflow:hidden;
+  flex:0 0 auto;
+  width:clamp(96px, 28vw, 220px);
+  height:clamp(72px, 18vw, 140px);
+  border-radius:12px; overflow:hidden;
+  background:#EEF5FF;
 }
-:root[data-theme="devil"] .stage-thumb{ background:#141414; color:#fff }
-.stage-thumb img{ width:100%; height:100%; object-fit:cover; display:block }
+:root[data-theme="devil"] .stage-thumb{ background:#141414; }
 
-/* กลาง: พื้นขาวยาว */
-.stage-spacer{ flex:1; height:140px; border-radius:12px; background:var(--card-bg) }
+/* รูปครอบเต็มกรอบ ไม่บิดสัดส่วน */
+.stage-thumb img{
+  display:block; width:100%; height:100%; object-fit:cover;
+}
 
-/* ขวา: วันที่ตัวหนาสีน้ำเงินเข้ม */
-.stage-date{ margin-left:auto; font-weight:800; color:var(--accent-strong) }
+/* ช่องว่างกลางให้ยืด */
+.stage-spacer{ flex:1 1 auto; min-width:8px; }
 
-/* ปิดการโต้ตอบตามภาพ */
-.stage-item, .stage-item *{ user-select:none; cursor:default }
+/* วันที่ชิดขวา ปรับขนาดอักษรตามจอ และไม่ล้น */
+.stage-date{
+  margin-left:auto; font-weight:800;
+  font-size:clamp(12px, 2.8vw, 16px);
+  white-space:nowrap; text-overflow:ellipsis; overflow:hidden;
+  max-width:40vw; /* กันทับรูปในจอเล็ก */
+}
+
+/* แถบช่วง ปุ่มไม่ล้นและอยู่กึ่งกลางแนวตั้ง */
+.stage-range{
+  position:relative; padding:8px 40px; text-align:center;
+  background:var(--card-bg); border:1px solid var(--line); border-radius:12px;
+}
+.stage-range-btn{ position:absolute; top:50%; transform:translateY(-50%);
+  width:28px; height:28px; line-height:28px; border:none; background:transparent;
+  color:var(--muted); font-weight:800; font-size:18px; border-radius:9999px; }
+.stage-range-btn.prev{ left:8px } .stage-range-btn.next{ right:8px }
+.stage-range-btn:hover{ background:rgba(0,0,0,.06) }
+:root[data-theme="devil"] .stage-range-btn:hover{ background:rgba(255,255,255,.06) }
+
+/* หน้าจอเล็กมาก: ลดขนาดรูปอีก และให้วันที่อยู่ใต้รูปเมื่อแคบมาก */
+@media (max-width: 360px){
+  .stage-thumb{ width:120px; height:84px; }
+  .stage-item{ align-items:flex-start; }
+  .stage-date{ max-width:unset; white-space:normal; }
+}
+
+/* หน้าจอกว้าง: ให้การ์ดสูงขึ้นเล็กน้อย */
+@media (min-width: 1024px){
+  .stage-thumb{ width:220px; height:140px; }
+  .stage-date{ font-size:16px; }
+}
+
 
 
 /* =========================
