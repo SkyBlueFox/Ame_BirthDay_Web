@@ -148,6 +148,7 @@ import imgStage140925 from '../assets/stage_photo/stage140925.jpg'
 import imgStage190925 from '../assets/stage_photo/stage190925.jpg'
 import imgStage200925 from '../assets/stage_photo/stage200925.jpg'
 import imgStage270925 from '../assets/stage_photo/stage270925.jpg'
+import imgStage280925 from '../assets/stage_photo/stage280925.jpg'
 
 
 
@@ -300,7 +301,7 @@ const LATE: Slot[] = [
   { date: '19/09/2025', thumb: imgStage190925 },
   { date: '20/09/2025', thumb: imgStage200925 },
   { date: '27/09/2025', thumb: imgStage270925 },
-  { date: '28/09/2025', thumb: null },
+  { date: '28/09/2025', thumb: imgStage280925 },
   { date: '03/10/2025', thumb: null },
   { date: '04/10/2025', thumb: null },
   { date: '05/10/2025', thumb: null },
