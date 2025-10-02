@@ -34,19 +34,23 @@ export default function Wishes(){
 
         <div className="wish-grid">
           {items.map(w => (
-            <article key={w.id} className="wish-card">
-              <div className="wish-sender">{w.author}</div>
+            <Link
+              key={w.id}
+              to={`/wish/${w.id}`}                       // ← ชี้ตามเส้นทางจริง
+              className="wish-card"
+              style={{ display:'block', textDecoration:'none', color:'inherit' }}
+            >
+              <div className="wish-sender">{w.author || 'Anonymous'}</div>
               <div className="wish-msg">{w.message}</div>
               <div className="muted" style={{marginTop:8, fontSize:12}}>
                 {new Date(w.created_at).toLocaleString()}
               </div>
-            </article>
+            </Link>
           ))}
           {items.length===0 && <div className="muted">ยังไม่มีคำอวยพร</div>}
         </div>
       </section>
 
-      {/* CTA ติดล่าง */}
       <div className="sticky-cta">
         <Link to="/create" className="btn focus-ring w-full">เขียนคำอวยพร</Link>
       </div>

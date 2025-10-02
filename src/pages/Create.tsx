@@ -14,9 +14,9 @@ export default function Create(){
     if (loading) return
     try {
       setLoading(true)
-      await createWish({ author, message })
+      const w = await createWish({ author, message })          // บันทึก
       setAuthor(''); setMessage('')
-      nav('/wishes') // ไปหน้ารายการ
+      nav(`/wish/${w.id}`)                                 // ไปหน้า detail ทันที
     } catch (err:any) {
       alert(err.message ?? 'บันทึกไม่สำเร็จ')
     } finally {
@@ -34,11 +34,10 @@ export default function Create(){
           <input
             id="name"
             className="input"
-            placeholder="เช่น เพื่อนเอ"
+            placeholder="เช่น Ame"
             value={author}
             onChange={e=>setAuthor(e.target.value)}
             maxLength={80}
-            required
           />
 
           <label className="form-label" htmlFor="text">ข้อความ</label>

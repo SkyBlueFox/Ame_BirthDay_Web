@@ -16,15 +16,9 @@ export default function WishDetail() {
       try {
         const data = await getWish(id);
         if (!alive) return;
-        if (!data) {
-          nav("/wishes", { replace: true });
-        } else {
-          setWish(data);
-          setLoading(false);
-        }
-      } catch {
-        nav("/wishes", { replace: true });
-      }
+        if (!data) nav("/wishes", { replace: true });
+        else { setWish(data); setLoading(false); }
+      } catch { nav("/wishes", { replace: true }); }
     })();
     return () => { alive = false; };
   }, [id, nav]);
@@ -36,15 +30,13 @@ export default function WishDetail() {
       </section>
     );
   }
-
-  // ป้องกันกรณีถูกนำทางแล้ว state เก่ายังเรนเดอร์
   if (!wish) return null;
 
   return (
     <section className="container narrow center" style={{ paddingBottom: 24 }}>
       <div className="wish-big">
         <p className="wish-big-text">{wish.message || "—"}</p>
-        <div className="wish-author">ชื่อผู้ส่ง: {wish.author || "ผู้ส่ง"}</div>
+        <div className="wish-author">ชื่อผู้ส่ง: {wish.author || "Anonymous"}</div>
       </div>
 
       <div className="stack-btn">
