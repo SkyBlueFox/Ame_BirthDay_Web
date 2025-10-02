@@ -1,32 +1,55 @@
 // src/pages/WishDetail.tsx
+import { useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { getWish } from "../lib/wishes";
+import { getWish, type Wish } from "../lib/wishes";
 
 export default function WishDetail() {
   const { id } = useParams();
   const nav = useNavigate();
-  const wish = id ? getWish(id) : undefined;
+  const [wish, setWish] = useState<Wish | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!wish) {
-    nav("/wishes", { replace: true });
-    return null;
+  useEffect(() => {
+    let alive = true;
+    if (!id) { nav("/wishes", { replace: true }); return; }
+    (async () => {
+      try {
+        const data = await getWish(id);
+        if (!alive) return;
+        if (!data) {
+          nav("/wishes", { replace: true });
+        } else {
+          setWish(data);
+          setLoading(false);
+        }
+      } catch {
+        nav("/wishes", { replace: true });
+      }
+    })();
+    return () => { alive = false; };
+  }, [id, nav]);
+
+  if (loading) {
+    return (
+      <section className="container narrow center" style={{ paddingBottom: 24 }}>
+        <div className="muted">กำลังโหลด…</div>
+      </section>
+    );
   }
+
+  // ป้องกันกรณีถูกนำทางแล้ว state เก่ายังเรนเดอร์
+  if (!wish) return null;
 
   return (
     <section className="container narrow center" style={{ paddingBottom: 24 }}>
       <div className="wish-big">
         <p className="wish-big-text">{wish.message || "—"}</p>
-        <div className="wish-author">ชื่อผู้ส่ง: {wish.name || "ผู้ส่ง"}</div>
+        <div className="wish-author">ชื่อผู้ส่ง: {wish.author || "ผู้ส่ง"}</div>
       </div>
 
-      {/* ปุ่มบนหน้านี้: กลับไป "หน้าคำอวยพรทั้งหมด" และ "หน้าแรก" */}
       <div className="stack-btn">
-        <Link className="btn btn-lg" to="/wishes">
-          คำอวยพร
-        </Link>
-        <Link className="btn btn-lg btn-navy" to="/home">
-          หน้าแรก
-        </Link>
+        <Link className="btn btn-lg" to="/wishes">คำอวยพร</Link>
+        <Link className="btn btn-lg btn-navy" to="/home">หน้าแรก</Link>
       </div>
     </section>
   );
